@@ -104,7 +104,7 @@
       var geometry = new THREE.PlaneGeometry(1000, 1000);
 	  
 	  //sky dome
-	  var skyGeo = new THREE.SphereGeometry(1000, 32, 32);
+	  var skyGeo = new THREE.CylinderGeometry(100,100,500, 100,60);
 	  var textureSky = THREE.ImageUtils.loadTexture( "textures/patterns/lincoln.jpg");
 		//textureSky.wrapS = THREE.RepeatWrapping;
     //  textureSky.wrapT = THREE.RepeatWrapping;
@@ -121,7 +121,7 @@
 	  
 	  var sky = new THREE.Mesh(skyGeo,materialSky);
 	  sky.material.side = THREE.DoubleSide;
-
+		//sky.rotation.x = -Math.PI /2;
 	  
 	  //light sources
 	  var light = new THREE.DirectionalLight(0xfffff3);
@@ -129,13 +129,14 @@
 	    camera.position.x,
         camera.position.y,
         camera.position.z);
-		light.target.position.set(        camera.position.x + 0.1,
+		light.target.position.set(
+		camera.position.x + 0.1,
         camera.position.y,
         camera.position.z);
 	  scene.add(light);
 	  sphereSize = 1;
 	  
-	  var ambient = new THREE.AmbientLight(0x444444);
+	  var ambient = new THREE.AmbientLight(0xffffff);
 		scene.add(ambient);
 
 	  
