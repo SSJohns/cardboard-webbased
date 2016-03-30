@@ -18,35 +18,9 @@
     <script src="js/objects/upload.js"></script>
     <script src="js/objects/sha256.js"></script>
     <script src="js/main.js"></script>
+    <script type="text/css" src="css/page.css"> </script>
     <style>
-    a.toggler {
-        background: green;
-        cursor: pointer;
-        border: 2px solid black;
-        border-right-width: 15px;
-        padding: 0 5px;
-        border-radius: 5px;
-        text-decoration: none;
-        transition: all .5s ease;
-    }
 
-    a.toggler.off {
-        background: red;
-        border-right-width: 2px;
-        border-left-width: 15px;
-    }
-    * {
-        padding: 0;
-        margin: 0;
-      }
-      .fit { /* set relative picture size */
-        max-width: 100%;
-        max-height: 100%;
-      }
-      .center {
-        display: block;
-        margin: auto;
-      }
     </style>
 </head>
 
@@ -70,9 +44,11 @@
   </div>
   <div data-role="main" class="ui-content">
     <a href="#" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all ui-icon-check ui-btn-icon-left">
-      <img class="center fit" id="pano" />
+      <img class="center fit" id="pano"/>
     </a>
-
+    <div id="myDialog">
+      <input type="text" id="myTextBox" />
+    </div>
     <div class="container">
   <header>
     <h1>Inserted Comments</h1>
@@ -93,35 +69,13 @@
 
 
 </div>
+</div>
     <script src="js/third-party/threejs/three.min.js"></script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/third-party/bootstrap/bootstrap.min.js"></script>
     <!-- <script id="vertexShader" src="glsl/vertex.glsl" type="x-shader/x-vertex"></script>
-
-
-    <script id="fragmentShader" src="glsl/fragment.glsl" type="x-shader/x-fragment"></script> -->
-<!-- ---------------- Custom Shader Code ------------------------ -->
-<script id="vertexShader" type="x-shader/x-vertex">
-varying vec3 vNormal;
-void main()
-{
-    vNormal = normalize( normalMatrix * normal );
-    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-}
-</script>
-
-<!-- fragment shader a.k.a. pixel shader -->
-<script id="fragmentShader" type="x-shader/x-vertex">
-varying vec3 vNormal;
-void main()
-{
-	float intensity = pow( 0.7 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) ), 1.0 );
-  gl_FragColor = vec4( 1.0, 1.0, 1.0, 1.0 ) * intensity;
-}
-</script>
-<!-- ----------------------------------------------------------- -->
 
     <script src="js/third-party/threejs/stats.min.js"></script>
     <script src="js/third-party/threejs/StereoEffect.js"></script>

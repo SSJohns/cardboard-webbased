@@ -4,30 +4,29 @@ $(document).ready(function(){
   });
 });
 
-  $("#myDialog").dialog({
-    autoOpen  : false,
-    modal     : true,
-    title     : "Comment To Add",
-    buttons   : {
-              'OK' : function() {
-                  var textValue = $('#myTextBox').val();
-                  var change1 = document.getElementById("changesAdded");
-                  var ul = document.getElementById("changesAdded");
-                  var li = document.createElement("li");
-                  li.appendChild(document.createTextNode(textValue));
-                  ul.appendChild(li);
-              },
-              'Close' : function() {
-                  $(this).dialog('close');
-              }
-                }
-});
-
 $(document).ready(function() {
     $("img").on("click", function(event) {
         var x = event.pageX - this.offsetLeft;
         var y = event.pageY - this.offsetTop;
         $("#myDialog").dialog("open");
+        $("#myDialog").dialog({
+            autoOpen  : false,
+            modal     : true,
+            title     : "Comment To Add",
+            buttons   : {
+                      'OK' : function() {
+                          var textValue = $('#myTextBox').val();
+                          var change1 = document.getElementById("changesAdded");
+                          var ul = document.getElementById("changesAdded");
+                          var li = document.createElement("li");
+                          li.appendChild(document.createTextNode(textValue));
+                          ul.appendChild(li);
+                      },
+                      'Close' : function() {
+                          $(this).dialog('close');
+                      }
+                        }
+        });
     });
 });
 
