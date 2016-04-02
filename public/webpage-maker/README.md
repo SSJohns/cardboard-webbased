@@ -10,7 +10,7 @@ Currently live at www3.nd.edu/~sjohns25
 
 
 ###To start the code:
-	index.html should be opened with a web browser
+	Live at https://cardboard-webpage.firebaseapp.com/
 ###To upload and add descriptions:
 	Mouse-click should add a description.
 

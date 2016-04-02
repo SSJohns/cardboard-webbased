@@ -9,9 +9,7 @@ A test using Google Cardboard based in the web. This VR program is made to be us
 
 
 ###To start the code:
-	index.html should be opened with a web browser
-###To transfer rooms:
-	Currently requeires user to look above a certain point
+	Live at https://cardboard-webpage.firebaseapp.com/
 
 ##To Do
 - [x] Make rooms visible
