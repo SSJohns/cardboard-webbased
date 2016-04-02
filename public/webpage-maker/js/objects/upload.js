@@ -19,13 +19,13 @@ function handleFileSelect(evt) {
         // Update the location bar so the URL can be shared with others
         var idx = window.location.href.indexOf('/');
         var webpage = (idx > 0) ? window.location.href.slice(0, idx + 1) : '';
-        webpage = webpage + "/cardboard-webbased/index.html/#" + hash;
+        webpage = window.location.origin + "/cardboard-webbased/#" + hash;
         window.location.hash = hash;
         var section_set = document.getElementById("uploader");
         section_set.innerHTML =  webpage;
         //section_set.appendChild(link);
         //document.body.appendChild(section_set);
-        console.log(webpage);
+        console.log(window.location);
       });
     };
   })(f);
