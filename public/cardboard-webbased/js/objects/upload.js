@@ -33,7 +33,6 @@ $(function() {
     // No hash found, so render the file upload button.
     $('#file-upload').show();
     //document.getElementById("file-upload").addEventListener('change', handleFileSelect, false);
-    console.log("done");
   } else {
     // A hash was passed in, so let's retrieve and render it.
     console.log("rendering")
@@ -44,7 +43,6 @@ $(function() {
       if (payload != null) {
         eraseWorld();
         init(payload);
-        console.log(payload);
       } else {
         $('#body').append("Not found");
       }

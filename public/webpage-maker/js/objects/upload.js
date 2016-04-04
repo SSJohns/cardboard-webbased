@@ -41,14 +41,12 @@ function handleFileSelect(evt) {
 
 $(function() {
   $('#spin').append(spinner);
-console.log('spinning');
   var idx = window.location.href.indexOf('#');
   var hash = (idx > 0) ? window.location.href.slice(idx + 1) : '';
   if (hash === '') {
     // No hash found, so render the file upload button.
     $('#file-upload').show();
     document.getElementById("file-upload").addEventListener('change', handleFileSelect, false);
-    console.log("done");
   } else {
     // A hash was passed in, so let's retrieve and render it.
     console.log("rendering")
@@ -59,7 +57,6 @@ console.log('spinning');
       if (payload != null) {
         eraseWorld();
         init(payload);
-        console.log(payload);
       } else {
         $('#body').append("Not found");
       }
