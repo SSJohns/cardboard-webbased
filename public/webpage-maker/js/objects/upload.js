@@ -20,17 +20,19 @@ function handleFileSelect(evt) {
         var idx = window.location.href.indexOf('/');
         var webpage = (idx > 0) ? window.location.href.slice(0, idx + 1) : '';
         webpage = window.location.origin + "/cardboard-webbased/#" + hash;
+        //<input type="text" value="&lt;a href=&quot;http://www.mysite.com/link&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;http://www.mysite.com/img.jpg&quot; border=&quot;0&quot; alt=&quot;mysite.com&quot;&gt;&lt;/a&gt;" />
         window.location.hash = hash;
         var section_set = document.getElementById("uploader");
-        var link = document.createElement('a');
-        var linkText = document.createTextNode(webpage);
-        link.appendChild(linkText);
-        link.title = "webpage";
-        link.href = webpage;
+        var link = document.createElement('input');
+        link.setAttribute('type','text');
+        link.setAttribute('value',webpage);
+        link.setAttribute('ahref',webpage);
+        //link.setAttribute('target',webpage);
+        link.setAttribute('src',webpage);
+        link.setAttribute('border','0');
+        link.setAttribute('alt',webpage);
+
         section_set.appendChild(link);
-        //section_set.appendChild(link);
-        //document.body.appendChild(section_set);
-        console.log(window.location);
       });
     };
   })(f);
