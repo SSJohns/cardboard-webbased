@@ -1,3 +1,5 @@
+var firebaseRef = "https://cardboard-webpage.firebaseIO.com/images/";
+
 $(document).ready(function(){
   $('a.toggler').click(function(){
       $(this).toggleClass('off');
@@ -14,6 +16,19 @@ $(document).ready(function() {
         var li = document.createElement("li");
         li.appendChild(document.createTextNode(textValue));
         ul.appendChild(li);
+        //get the hash in this webpage
+        var idx = window.location.href.indexOf('#');
+        var hash = (idx > 0) ? window.location.href.slice(idx + 1) : '';
+        var f = new Firebase(firebaseRef + 'pano/' + hash + '/filePayload');
+        spinner.spin(document.getElementById('spin'));
+        // Set the file payload to Firebase and register an onComplete handler to stop the spinner and show the preview
+        f.set(filePayload, function() {
+          spinner.stop();
+          document.getElementById("pano").src = e.target.result;
+          $('#file-upload').hide();
+          // Update the location bar so the URL can be shared with others
+          editWebPage(hash);
+        });
     });
 });
 

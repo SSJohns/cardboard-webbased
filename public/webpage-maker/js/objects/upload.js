@@ -17,26 +17,41 @@ function handleFileSelect(evt) {
         document.getElementById("pano").src = e.target.result;
         $('#file-upload').hide();
         // Update the location bar so the URL can be shared with others
-        var idx = window.location.href.indexOf('/');
-        var webpage = (idx > 0) ? window.location.href.slice(0, idx + 1) : '';
-        webpage = window.location.origin + "/cardboard-webbased/#" + hash;
-        //<input type="text" value="&lt;a href=&quot;http://www.mysite.com/link&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;http://www.mysite.com/img.jpg&quot; border=&quot;0&quot; alt=&quot;mysite.com&quot;&gt;&lt;/a&gt;" />
-        window.location.hash = hash;
-        var section_set = document.getElementById("uploader");
-        var link = document.createElement('input');
-        link.setAttribute('type','text');
-        link.setAttribute('value',webpage);
-        link.setAttribute('ahref',webpage);
-        //link.setAttribute('target',webpage);
-        link.setAttribute('src',webpage);
-        link.setAttribute('border','0');
-        link.setAttribute('alt',webpage);
-
-        section_set.appendChild(link);
+        editWebPage(hash);
       });
     };
   })(f);
   reader.readAsDataURL(f);
+}
+
+function editWebPage(hash){
+  var idx = window.location.href.indexOf('/');
+  var webpage = (idx > 0) ? window.location.href.slice(0, idx + 1) : '';
+  webpage = window.location.origin + "/cardboard-webbased/#" + hash;
+  //<input type="text" value="&lt;a href=&quot;http://www.mysite.com/link&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;http://www.mysite.com/img.jpg&quot; border=&quot;0&quot; alt=&quot;mysite.com&quot;&gt;&lt;/a&gt;" />
+  window.location.hash = hash;
+  var section_set = document.getElementById("uploader");
+  var link = document.createElement('input');
+  link.setAttribute('type','text');
+  link.setAttribute('value',webpage);
+  link.setAttribute('ahref',webpage);
+  //link.setAttribute('target',webpage);
+  link.setAttribute('src',webpage);
+  link.setAttribute('border','0');
+  link.setAttribute('alt',webpage);
+
+  section_set.appendChild(link);
+
+  //Add what comments we have
+  var commenting = document.getElementById("comments");
+  var heading = document.createElement('header');
+  var head1 = document.createElement('h1');
+  var ulist = document.createElement('ul');
+  ulist.id = "changesAdded";
+  head1.innerHTML = "Inserted Comments";
+  heading.appendChild(head1);
+  heading.appendChild(ulist);
+  commenting.appendChild(heading);
 }
 
 $(function() {
@@ -54,10 +69,7 @@ $(function() {
     var f = new Firebase(firebaseRef + '/pano/' + hash + '/filePayload');
     f.once('value', function(snap) {
       var payload = snap.val();
-      if (payload != null) {
-        eraseWorld();
-        init(payload);
-      } else {
+      if (payload == null) {
         $('#body').append("Not found");
       }
       spinner.stop();

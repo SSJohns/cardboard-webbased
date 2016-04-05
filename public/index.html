@@ -19,33 +19,35 @@
 	  background-color: #f2f2f2;
       padding: 25px;
     }
+    .boldlist ol, li { font-weight: normal; font-size: 20px; }
+    .boldlist li div { font-weight: normal; }
   </style>
 </head>
 <body>
 
 <div class="jumbotron">
   <div class="container text-center">
-    <h1>Image Uploader</h1>
-    <p>A test using Google Cardboard based in the web. To make a workable room viewer that allows for transit between rooms. Currently live</p>
-<ol>
+    <h1>Cardboard Web Demo</h1>
+    <h3>A test using Google Cardboard based in the web. To make a workable room <br>viewer that allows users to make their own 3D rooms out of panoramic images</h3>
+<br><br>
+<ol class="boldlist">
   <li>Go to upload and pick an image to make into a VR room</li>
   <li>A link will be generatd to the equivalent room at the top of the page</li>
   <li>Go to the link on your phone and share it with your friends</li>
-</ol>
-  </div>
+</ol> </div>
 </div>
 
 <div class="container-fluid bg-3 text-center">
   <h3>You may upload or look at an image...</h3><br>
   <div class="row">
     <div class="col-sm-6">
-      <p>Upload</p>
+      <h3>Upload</h3>
       <a href="./webpage-maker/">
            <img src="images/upload.jpg" class="img-responsive" style="width:100%" alt="Image">
       </a>
     </div>
-    <div class="col-sm-6">
-      <p>View</p>
+    <div class="col-sm-6" >
+      <h3>View</h3>
       <a href="./cardboard-webbased/">
            <img src="images/vr-image.jpg" class="img-responsive" style="width:100%" alt="Image">
       </a>
@@ -53,9 +55,9 @@
 </div><br><br>
 
 <footer class="container-fluid text-center">
-  <p>
+  <h3>
     Shaquille Johnson - 2016
-  </p>
+  </h3>
 </footer>
 
 </body>
