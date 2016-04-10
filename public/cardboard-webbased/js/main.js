@@ -8,6 +8,7 @@ var count = 0;
 var trueFalse = true;
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2(), INTERSECTED;
+var firebaseRef = "https://cardboard-webpage.firebaseIO.com/images/";
 
 var clock = new THREE.Clock();
 
@@ -123,6 +124,12 @@ function init(world) {
       side: THREE.DoubleSide
     });
 
+    var f = new Firebase(firebaseRef + 'pano/' + hash + '/comment/');
+    f.once("value",function(snapshot){
+      snapshot.forEach(function(data){
+        
+      });
+    });
     // var cursor = new THREE.Mesh(geometryCursor,materialCursor);
     // camera.add(cursor);
     // cursor.position.z = -100;
