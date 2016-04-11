@@ -158,7 +158,7 @@ function init(world) {
         var tempBall = new THREE.Mesh( ballGeometry, customMaterial );
         ball.push(tempBall);
         scene.add( ball[i] );
-        ball[i].position.set(x,250,y);
+        ball.position.set(x,250,y);
         ballsText.push(text);
         i++;
       });
