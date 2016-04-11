@@ -1,5 +1,6 @@
 var camera, scene, renderer, stats;
-var effect, controls, ball;
+var effect, controls;
+var ball = [];
 var element, container;
 var sky;
 var squareMesh = [];
@@ -11,6 +12,7 @@ var mouse = new THREE.Vector2(), INTERSECTED;
 var firebaseRef = "https://cardboard-webpage.firebaseIO.com/images/";
 var idx = window.location.href.indexOf('#');
 var hash = (idx > 0) ? window.location.href.slice(idx + 1) : '';
+var ballsText = [];
 
 var clock = new THREE.Clock();
 
@@ -128,12 +130,14 @@ function init(world) {
 
     var f = new Firebase(firebaseRef + 'pano/' + hash + '/comment/');
     f.once("value",function(snapshot){
+      var i;
       snapshot.forEach(function(data){
         var dataVal = data.val();
         var x = dataVal.X;
         var y = dataVal.Y;
         var text = dataVal.text;
-        var sphereGeo = new THREE.SphereGeometry(10, 32, 16);
+        console.log(dataVal.text);
+        var sphereGeo = new THREE.SphereGeometry(100, 32, 16);
         var moonTexture = THREE.ImageUtils.loadTexture( "textures/patterns/014_pano3.jpg" );
         var moonMaterial = new THREE.MeshBasicMaterial( { map: moonTexture } );
         var moon = new THREE.Mesh(sphereGeo, moonMaterial);
@@ -151,9 +155,12 @@ function init(world) {
           transparent: true
         });
         var ballGeometry = new THREE.SphereGeometry( 120, 32, 16 );
-        ball = new THREE.Mesh( ballGeometry, customMaterial );
-        scene.add( ball );
-        ball.position.set(x,y,0);
+        var tempBall = new THREE.Mesh( ballGeometry, customMaterial );
+        ball.push(tempBall);
+        scene.add( ball[i] );
+        ball[i].position.set(x,250,y);
+        ballsText.push(text);
+        i++;
       });
     });
     // var cursor = new THREE.Mesh(geometryCursor,materialCursor);
@@ -292,8 +299,10 @@ function render(dt) {
       //console.log(intersects[i].object.material);
       try{
         //intersects[ i ].object.material.color.set( 0xff0000 );
-        if(ball == intersects[i].object){
-          console.log("Working");
+        for (var j = 0; j < ball.length; j++){
+          if(ball[j] == intersects[i].object){
+            typeWord(ballText[j]);
+          }
         }
       }catch(e){console.log(e);}
     }
