@@ -1,6 +1,7 @@
 var spinner = new Spinner({color: '#ddd'});
 var firebaseRef = "https://cardboard-webpage.firebaseIO.com/images/";
 
+
 function handleFileSelect(evt) {
   var f = evt.target.files[0];
   var reader = new FileReader();

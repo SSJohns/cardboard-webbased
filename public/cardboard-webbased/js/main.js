@@ -9,6 +9,8 @@ var trueFalse = true;
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2(), INTERSECTED;
 var firebaseRef = "https://cardboard-webpage.firebaseIO.com/images/";
+var idx = window.location.href.indexOf('#');
+var hash = (idx > 0) ? window.location.href.slice(idx + 1) : '';
 
 var clock = new THREE.Clock();
 
@@ -127,38 +129,42 @@ function init(world) {
     var f = new Firebase(firebaseRef + 'pano/' + hash + '/comment/');
     f.once("value",function(snapshot){
       snapshot.forEach(function(data){
-        
+        var dataVal = data.val();
+        var x = dataVal.X;
+        var y = dataVal.Y;
+        var text = dataVal.text;
+        var sphereGeo = new THREE.SphereGeometry(10, 32, 16);
+        var moonTexture = THREE.ImageUtils.loadTexture( "textures/patterns/014_pano3.jpg" );
+        var moonMaterial = new THREE.MeshBasicMaterial( { map: moonTexture } );
+        var moon = new THREE.Mesh(sphereGeo, moonMaterial);
+        scene.add(moon);
+        moon.position.set(-800,250,0);
+
+        // create custom material from the shader code above
+        //   that is within specially labeled script tags
+        var customMaterial = new THREE.ShaderMaterial({
+          uniforms: {  },
+          vertexShader:   document.getElementById( 'vertexShader'   ).textContent,
+          fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+          side: THREE.DoubleSide,
+          blending: THREE.AdditiveBlending,
+          transparent: true
+        });
+        var ballGeometry = new THREE.SphereGeometry( 120, 32, 16 );
+        ball = new THREE.Mesh( ballGeometry, customMaterial );
+        scene.add( ball );
+        ball.position.set(x,y,0);
       });
     });
     // var cursor = new THREE.Mesh(geometryCursor,materialCursor);
     // camera.add(cursor);
     // cursor.position.z = -100;
     // cursor.lookAt( camera.position);
-    // var sphereGeo = new THREE.SphereGeometry(100, 32, 16);
 
     // Commented out special ball geometry, may be useful at another day and time
 
 
-    // var moonTexture = THREE.ImageUtils.loadTexture( "textures/patterns/014_pano3.jpg" );
-    // var moonMaterial = new THREE.MeshBasicMaterial( { map: moonTexture } );
-    // var moon = new THREE.Mesh(sphereGeo, moonMaterial);
-    // scene.add(moon);
-    // moon.position.set(-800,250,0);
-    //
-    // // create custom material from the shader code above
-    // //   that is within specially labeled script tags
-    // var customMaterial = new THREE.ShaderMaterial({
-    //   uniforms: {  },
-    //   vertexShader:   document.getElementById( 'vertexShader'   ).textContent,
-    //   fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
-    //   side: THREE.DoubleSide,
-    //   blending: THREE.AdditiveBlending,
-    //   transparent: true
-    // });
-    // var ballGeometry = new THREE.SphereGeometry( 120, 32, 16 );
-    // ball = new THREE.Mesh( ballGeometry, customMaterial );
-    // scene.add( ball );
-    // ball.position.set(-800,250,0);
+
 
     window.addEventListener('resize', resize, false);
     setTimeout(resize, 1);
