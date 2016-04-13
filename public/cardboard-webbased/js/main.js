@@ -136,14 +136,6 @@ function init(world) {
         var x = dataVal.X;
         var y = dataVal.Y;
         var text = dataVal.text;
-        console.log(dataVal.text);
-        var sphereGeo = new THREE.SphereGeometry(100, 32, 16);
-        var moonTexture = THREE.ImageUtils.loadTexture( "textures/patterns/014_pano3.jpg" );
-        var moonMaterial = new THREE.MeshBasicMaterial( { map: moonTexture } );
-        var moon = new THREE.Mesh(sphereGeo, moonMaterial);
-        scene.add(moon);
-        moon.position.set(-800,250,0);
-
         // create custom material from the shader code above
         //   that is within specially labeled script tags
         var customMaterial = new THREE.ShaderMaterial({
@@ -154,11 +146,11 @@ function init(world) {
           blending: THREE.AdditiveBlending,
           transparent: true
         });
-        var ballGeometry = new THREE.SphereGeometry( 120, 32, 16 );
+        var ballGeometry = new THREE.SphereGeometry( 50, 32, 16 );
         var tempBall = new THREE.Mesh( ballGeometry, customMaterial );
         ball.push(tempBall);
-        scene.add( ball[i] );
-        ball.position.set(x,250,y);
+        scene.add( tempBall);
+        tempBall.position.set(x,y,);
         ballsText.push(text);
         i++;
       });
