@@ -4,6 +4,7 @@ var ball = [];
 var element, container;
 var sky;
 var squareMesh = [];
+var lostMesh = {};
 var horiz = 0;
 var count = 0;
 var trueFalse = true;
@@ -12,7 +13,6 @@ var mouse = new THREE.Vector2(), INTERSECTED;
 var firebaseRef = "https://cardboard-webpage.firebaseIO.com/images/";
 var idx = window.location.href.indexOf('#');
 var hash = (idx > 0) ? window.location.href.slice(idx + 1) : '';
-var ballsText = [];
 
 var clock = new THREE.Clock();
 
@@ -169,13 +169,11 @@ function init(world) {
         moon.position.y = -1000 * Math.cos(lat) * Math.sin(lng);
         moon.position.z = 1000 * Math.sin(lat) ;
 
-        //ballsText.push(text);
         ball.push(tempBall);
-        scene.add( tempBall);
+        scene.add(tempBall);
         scene.add(moon);
       });
     });
-    console.log(ball);
     window.addEventListener('resize', resize, false);
     setTimeout(resize, 1);
 }
@@ -197,69 +195,10 @@ function Cursor() { //make a ring to allow users to see where the center is onsc
   THREE.Mesh.call(this, geometryCursor, materialCursor);
 }
 function onMouseMove( event ) {
-
 // calculate mouse position in normalized device coordinates
 // (-1 to +1) for both components
-
 mouse.x = 0;//( window.innerWidth / 2);// * 2 - 1;
 mouse.y = 0;//- ( window.innerHeight / 2);// * 2 + 1;
-
-}
-function typeWord(text){ //will put the entered phrase onto the screen
-    for (j = 0; j< text.length;j++ ){
-    if(text.charCodeAt(j) == 32) // if a space we keep going with the program
-      continue;
-
-    var geometry = new THREE.PlaneGeometry(15,15);//exampleSquare();
-    var textWords = THREE.ImageUtils.loadTexture( "textures/text/olSb3.png" );
-    textWords.minFilter = textWords.magFilter = THREE.NearestFilter;
-    var squareMaterial =  new THREE.MeshPhongMaterial({ map:textWords,color:0xffffff });
-    squareMesh[0+j] = new THREE.Mesh( geometry, squareMaterial );
-    squareMesh[j].material.side = THREE.DoubleSide;
-    squareMesh[j].material.opacity = 0.6;
-    squareMesh[j].material.transparent = true;
-
-
-    //change to display letters
-
-    geometry.computeBoundingBox();
-    var squarefaces = geometry.faces;
-    var max = geometry.boundingBox.max,
-      min = geometry.boundingBox.min;
-    var offset = new THREE.Vector2(0 - min.x, 0 - min.y);
-    var range = new THREE.Vector2(max.x - min.x, max.y - min.y);
-    geometry.faceVertexUvs[0] = [];
-
-    //convert to the ascii of the character on this run through
-    var hexNum = (text.charCodeAt(j)).toString(16);
-    var xindex = parseInt(hexNum[1],16);//(text.charCodeAt(j))%16,
-      yindex = 15-parseInt(hexNum[0],16);//((text.charCodeAt(j))-xindex)/16;
-
-    //For the text to be made find the index on the canvas that the letter is mapped to
-    var multx =	(xindex)/16;
-    var multy = (yindex)/16;
-    for (i = 0; i < geometry.faces.length ; i++) {
-      var v1 = geometry.vertices[squarefaces[i].a],
-        v2 = geometry.vertices[squarefaces[i].b],
-        v3 = geometry.vertices[squarefaces[i].c];
-      geometry.faceVertexUvs[0].push([
-        new THREE.Vector2((1/16)*(v1.x + offset.x)/range.x + multx,(1/16)*(v1.y + offset.y)/range.y + multy),
-        new THREE.Vector2((1/16)*(v2.x + offset.x)/range.x + multx,(1/16)*(v2.y + offset.y)/range.y + multy),
-        new THREE.Vector2((1/16)*(v3.x + offset.x)/range.x + multx,(1/16)*(v3.y + offset.y)/range.y + multy)
-      ]);
-    }
-
-    geometry.uvsNeedUpdate = true;
-    camera.add(squareMesh[j]);
-
-    count++;
-    // Position tiles
-    if (count == 27 ){ // will send the text to a newline when it is to long
-      horiz += 20;
-      count=1;
-    }
-    squareMesh[j].position.set(15*(j%27)-15*27/2,-horiz,-10*27 - 30);//27 - arbitrary length choosen for Star Wars
-    }
 }
 
 function resize() {
@@ -304,24 +243,33 @@ function render(dt) {
         //intersects[ i ].object.material.color.set( 0xff0000 );
         for (var j = 0; j < ball.length; j++){
           if(ball[j] == intersects[i].object){
-            typeWord(ball[j].text);
+            typeWordTimed(ball[j].text,1000);
           }
         }
       }catch(e){console.log(e);}
     }
 
-    fadeEffect(squareMesh,((Math.cos(timer))/(Math.cos(Math.PI))) );
+    fadeEffect(squareMesh,lostMesh,((Math.cos(timer))/(Math.cos(Math.PI))) );
 
     effect.render(scene, camera);
 }
 
-function fadeEffect(words,value){
+function fadeEffect(words,lost,value){
     for(k=0;k<(words.length);k++){
       if(words[k] == null)
         continue;
       if((words[k].material.opacity = value) < 0)
         words[k].material.opacity = words[k].material.opacity * -1;
     }
+    // var nowTime = new Date().getTime();
+    // for(k=0;k<(lost.length); k++){
+    //   if (lost[k] == null)
+    //     continue;
+    //   if (lost[k].timer >= nowTime){
+    //     console.log("Removing: ", lost[k]);
+    //     camera.remove(lost[k])
+    //   }
+    // }
 }
 
 function eraseWorld() {
