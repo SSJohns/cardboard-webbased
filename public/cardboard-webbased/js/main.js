@@ -30,8 +30,9 @@ function init(world) {
 
     scene = new THREE.Scene();
 
-
-    camera = new THREE.PerspectiveCamera(90, 1, 0.001, 7000000);
+    var width = container.offsetWidth;
+    var height = container.offsetHeight;
+    camera = new THREE.PerspectiveCamera(90, width/height, 0.001, 7000000);
     camera.position.set(0, 10, 0);
     scene.add(camera);
 
@@ -148,23 +149,33 @@ function init(world) {
         });
         var ballGeometry = new THREE.SphereGeometry( 50, 32, 16 );
         var tempBall = new THREE.Mesh( ballGeometry, customMaterial );
+
+
+        lat=Math.atan2(0,Math.sqrt(x*x+y*y));
+        lng=Math.atan2(y,x);
+        tempBall.position.x = 1000 * Math.cos(lat) * Math.cos(lng);
+        tempBall.position.y = -1000 * Math.cos(lat) * Math.sin(lng);
+        tempBall.position.z = 1000 * Math.sin(lat);
+        tempBall.text = text;
+        i++;
+
+        //added a line to make the spheres more visible
+        var sphereGeo = new THREE.SphereGeometry(50, 32, 16);
+        var moonTexture = THREE.ImageUtils.loadTexture( "textures/patterns/unnamed.png" );
+        var moonMaterial = new THREE.MeshBasicMaterial( { map: moonTexture } );
+        var moon = new THREE.Mesh(sphereGeo, moonMaterial);
+
+        moon.position.x = 1000 * Math.cos(lat) * Math.cos(lng);
+        moon.position.y = -1000 * Math.cos(lat) * Math.sin(lng);
+        moon.position.z = 1000 * Math.sin(lat) ;
+
+        //ballsText.push(text);
         ball.push(tempBall);
         scene.add( tempBall);
-        tempBall.position.set(x,y,);
-        ballsText.push(text);
-        i++;
+        scene.add(moon);
       });
     });
-    // var cursor = new THREE.Mesh(geometryCursor,materialCursor);
-    // camera.add(cursor);
-    // cursor.position.z = -100;
-    // cursor.lookAt( camera.position);
-
-    // Commented out special ball geometry, may be useful at another day and time
-
-
-
-
+    console.log(ball);
     window.addEventListener('resize', resize, false);
     setTimeout(resize, 1);
 }
@@ -293,7 +304,7 @@ function render(dt) {
         //intersects[ i ].object.material.color.set( 0xff0000 );
         for (var j = 0; j < ball.length; j++){
           if(ball[j] == intersects[i].object){
-            typeWord(ballText[j]);
+            typeWord(ball[j].text);
           }
         }
       }catch(e){console.log(e);}
