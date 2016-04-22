@@ -2,9 +2,10 @@ var camera, scene, renderer, stats;
 var effect, controls;
 var ball = [];
 var element, container;
+var destroyTime;
 var sky;
 var squareMesh = [];
-var lostMesh = {};
+var lostMesh = [];
 var horiz = 0;
 var count = 0;
 var trueFalse = true;
@@ -243,7 +244,7 @@ function render(dt) {
         //intersects[ i ].object.material.color.set( 0xff0000 );
         for (var j = 0; j < ball.length; j++){
           if(ball[j] == intersects[i].object){
-            typeWordTimed(ball[j].text,1000);
+            typeWordTimed(ball[j].text);
           }
         }
       }catch(e){console.log(e);}
@@ -261,15 +262,13 @@ function fadeEffect(words,lost,value){
       if((words[k].material.opacity = value) < 0)
         words[k].material.opacity = words[k].material.opacity * -1;
     }
-    // var nowTime = new Date().getTime();
-    // for(k=0;k<(lost.length); k++){
-    //   if (lost[k] == null)
-    //     continue;
-    //   if (lost[k].timer >= nowTime){
-    //     console.log("Removing: ", lost[k]);
-    //     camera.remove(lost[k])
-    //   }
-    // }
+    var nowTime = new Date().getTime();
+      if (destroyTime <= nowTime){
+        console.log("Removing: ", lost[k]);
+        camera.remove(camera.children[lost]);
+        lost = null;
+        if(horiz != 0) horiz -= 20;
+      }
 }
 
 function eraseWorld() {

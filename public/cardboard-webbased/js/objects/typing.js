@@ -56,12 +56,12 @@ function typeWord(text){ //will put the entered phrase onto the screen
 
 //will put the entered phrase onto the screen
 //wait for time sec and then delete it
-function typeWordTimed(text, time){
+function typeWordTimed(text){
     var timer = new Date().getTime();
     console.log("Timer: ", timer);
-    timer += time;
+    timer +=  1000;
     console.log("Time: ", timer);
-
+    destroyTime = timer;
     for (j = 0; j< text.length;j++ ){
     if(text.charCodeAt(j) == 32) // if a space we keep going with the program
       continue;
@@ -113,10 +113,6 @@ function typeWordTimed(text, time){
 
     count++;
     // Position tiles
-    if (count == 27 ){ // will send the text to a newline when it is to long
-      horiz += 20;
-      count=1;
-    }
     lostMesh[j].position.set(15*(j%27)-15*27/2,-horiz,-10*27 - 30);//27 - arbitrary length choosen for Star Wars
     }
 }
