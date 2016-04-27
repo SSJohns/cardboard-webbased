@@ -769,7 +769,7 @@ var PotreeRenderer = function(){
 
 			camera.aspect = aspect;
 			camera.updateProjectionMatrix();
-
+			
 			renderer.setSize(width, height);
 			effect.setSize(width,height);
 			//effect.render(scene, camera);
