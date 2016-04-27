@@ -1,0 +1,198 @@
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>Viewer</title>
+	<style>canvas { width: 100%; height: 100% }</style>
+</head>
+<body style="margin: 0; padding: 0">
+
+	<style type="text/css">
+
+	#renderArea{
+		width: 100%;
+		height: 100%;
+	}
+
+	.info{
+		color:		white;
+		font-weight: bold;
+		text-shadow:  1px  1px 1px black,
+					  1px -1px 1px black,
+					 -1px  1px 1px black,
+					 -1px -1px 1px black;
+	}
+
+	a:hover, a:visited, a:link, a:active{
+		color: #ccccff;
+		text-decoration: none;
+	}
+
+	</style>
+
+	<script src="../libs/other/BinaryHeap.js"></script>
+	<script src="../libs/three.js/build/three.js"></script>
+	<script src="../libs/other/OrbitControls.js"></script>
+	<script src="../libs/other/DeviceOrientationControls.js"></script>
+	<script src="../build/js/potree.js"></script>
+
+	<!-- HEADING -->
+	<div class="info" style="position: absolute; left: 300px; right: 300px; top: 10px; text-align: center;">
+		<a href="http://potree.org" target="_blank">potree.org</a>
+	</div>
+
+	<div id="renderArea"></div>
+	<script src="./js/StereoEffect.js"></script>
+	<script>
+		var pointcloudPath = "../resources/pointclouds/lion_takanawa/cloud.js";
+
+		var elRenderArea = document.getElementById("renderArea");
+
+		var renderer, container, element;
+		var effect;
+		var camera;
+		var scene;
+		var pointcloud;
+		var clock = new THREE.Clock();
+		var controls;
+
+		function init(){
+			var fov = 75;
+			var width = elRenderArea.clientWidth;
+			var height = elRenderArea.clientHeight;
+			var aspect = width / height;
+			var near = 0.1;
+			var far = 1000000;
+
+			scene = new THREE.Scene();
+
+			camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+			//camera.rotation.order = 'ZYX';
+
+			referenceFrame = new THREE.Object3D();
+			scene.add(referenceFrame);
+
+			renderer = new THREE.WebGLRenderer();
+			renderer.setSize(width, height);
+			container = document.getElementById('renderArea');
+			container.appendChild(renderer.domElement);
+
+			effect = new THREE.StereoEffect(renderer);
+			effect.setSize(width,height);
+			//console.log(effect);
+			console.log(renderer);
+			elRenderArea.appendChild(renderer.domElement);
+
+			// camera and controls
+			camera.position.set(5, 5, 5);
+			camera.lookAt(new THREE.Vector3(0,0,0));
+
+			// load pointcloud
+			Potree.POCLoader.load(pointcloudPath, function(geometry){
+
+				pointcloud = new Potree.PointCloudOctree(geometry);
+				pointcloud.material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+				pointcloud.material.size = 1;
+
+				referenceFrame.add(pointcloud);
+
+				// move point cloud to origin and flip y and z axis
+				referenceFrame.updateMatrixWorld(true);
+				var sg = pointcloud.boundingSphere.clone().applyMatrix4(pointcloud.matrixWorld);
+				referenceFrame.position.copy(sg.center).multiplyScalar(-1);
+				referenceFrame.updateMatrixWorld(true);
+				referenceFrame.applyMatrix(new THREE.Matrix4().set(
+					1,0,0,0,
+					0,0,1,0,
+					0,-1,0,0,
+					0,0,0,1
+				));
+
+			});
+
+			controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+			//add controls for the phone to move around
+			function setOrientationControls(e) {
+				if (!e.alpha) {
+						return;
+				}
+
+				controls = new THREE.DeviceOrientationControls(camera, true);
+				console.log(controls);
+				controls.connect();
+				controls.update();
+
+				renderer.domElement.addEventListener('click', fullscreen, false);
+
+				window.removeEventListener('deviceorientation', setOrientationControls, true);
+			}
+			window.addEventListener('deviceorientation', setOrientationControls, true);
+			window.addEventListener('resize', resize, false);
+			setTimeout(resize, 1);
+		}
+
+		function resize() {
+	    var width = container.offsetWidth;
+	    var height = container.offsetHeight;
+
+	    camera.aspect = width / height;
+	    camera.updateProjectionMatrix();
+
+	    renderer.setSize(width, height);
+	    effect.setSize(width, height);
+		}
+
+		function update(){
+			resize();
+			if(pointcloud){
+				pointcloud.update(camera, renderer);
+			}
+			camera.updateProjectionMatrix();
+
+			controls.update(clock.getDelta());
+		}
+
+		function render(){
+			// resize to fit canvas size
+			var width = elRenderArea.clientWidth;
+			var height = elRenderArea.clientHeight;
+			var aspect = width / height;
+
+			camera.aspect = aspect;
+			camera.updateProjectionMatrix();
+
+			//renderer.setSize(width, height);
+			effect.setSize(width,height);
+
+			// render scene
+			//renderer.render(scene, camera);
+			effect.render(scene,camera);
+			renderer.clearDepth();
+		}
+
+		function loop() {
+			requestAnimationFrame(loop);
+
+			update(clock.getDelta());
+			render(clock.getDelta());
+			controls.update();
+		};
+
+		init();
+		loop();
+
+		function fullscreen() {
+		    if (container.requestFullscreen) {
+		        container.requestFullscreen();
+		    } else if (container.msRequestFullscreen) {
+		        container.msRequestFullscreen();
+		    } else if (container.mozRequestFullScreen) {
+		        container.mozRequestFullScreen();
+		    } else if (container.webkitRequestFullscreen) {
+		        container.webkitRequestFullscreen();
+		    }
+		}
+	</script>
+
+</body>
+</html>

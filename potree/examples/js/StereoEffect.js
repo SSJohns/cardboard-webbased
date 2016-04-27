@@ -53,7 +53,7 @@ THREE.StereoEffect = function ( renderer ) {
 
 
 		if ( camera.parent === undefined ) camera.updateMatrixWorld();
-	
+
 		camera.matrixWorld.decompose( _position, _quaternion, _scale );
 
 		// Stereo frustum calculation
@@ -86,7 +86,7 @@ THREE.StereoEffect = function ( renderer ) {
 			camera.far
 		);
 
-		//_cameraL.translateX( - this.separation / 2.0 );
+		_cameraL.translateX( - this.separation / 2.0 );
 		_cameraL.position.copy( _position );
 		_cameraL.quaternion.copy( _quaternion );
 
@@ -101,7 +101,7 @@ THREE.StereoEffect = function ( renderer ) {
 			camera.far
 		);
 
-		//_cameraR.translateX( this.separation / 2.0 );
+		_cameraR.translateX( this.separation / 2.0 );
 		_cameraR.position.copy( _position );
 		_cameraR.quaternion.copy( _quaternion );
 		//
